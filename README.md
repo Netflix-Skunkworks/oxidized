@@ -872,6 +872,24 @@ AWS SNS hook requires the following configuration keys:
 
 Your AWS credentials should be stored in `~/.aws/credentials`.
 
+## Hook type: slackdiff
+
+The `slackdiff` hook posts config diffs to a channel of your choice using a webhook. It only triggers for post_store events.
+
+You will need to manually install the `slack-notifier` gem on your system.
+
+Configuration example:
+
+``` yaml
+hooks:
+  slack:
+    type: slackdiff
+    events: [post_store]
+    webhook_url: SLACK_WEBHOOK_URL__GENERATE_VIA_YOUR_SLACK_ADMIN_CONSOLE
+    channel: #network-changes
+    username: oxidized
+```
+
 # Ruby API
 
 The following objects exist in Oxidized.
