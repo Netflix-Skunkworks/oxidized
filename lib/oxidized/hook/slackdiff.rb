@@ -1,4 +1,4 @@
-require 'slack-ruby-client'
+require 'slack'
 
 class SlackDiff < Oxidized::Hook
   def validate_cfg!
