@@ -1,19 +1,27 @@
-require 'slack-notifier'
+require 'slack-ruby-client'
 
 class SlackDiff < Oxidized::Hook
   def validate_cfg!
-    raise KeyError, 'hook.webhook_url is required' unless cfg.has_key?('webhook_url')
+    raise KeyError, 'hook.token is required' unless cfg.has_key?('token')
     raise KeyError, 'hook.channel is required' unless cfg.has_key?('channel')
-    raise KeyError, 'hook.username is required' unless cfg.has_key?('username')
   end
 
   def run_hook(ctx)
     if ctx.node
       if ctx.event.to_s == "post_store"
-        notifier = Slack::Notifier.new cfg.webhook_url, channel: cfg.channel, username: cfg.username
+        Slack.configure do |config|
+          config.token = cfg.token
+        end
+        client = Slack::Web::Client.new
+        client.auth_test
         diff = `cd #{ctx.node.repo.to_s} && git diff --no-color #{ctx.commitref.to_s}~1..#{ctx.commitref.to_s}`
-        text = "#{ctx.node.name.to_s} #{ctx.node.group.to_s} #{ctx.node.model.class.name.to_s.downcase}\n```#{diff}```"
-        notifier.post text: text
+        title = "#{ctx.node.name.to_s} #{ctx.node.group.to_s} #{ctx.node.model.class.name.to_s.downcase}"
+        client.files_upload(channels: cfg.channel, as_user: true,
+                             content: diff,
+                             filetype: "diff",
+                             title: title,
+                             filename: "change"
+                            )
       end
     end
   end
