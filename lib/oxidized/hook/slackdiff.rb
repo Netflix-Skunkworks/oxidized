@@ -9,10 +9,7 @@ class SlackDiff < Oxidized::Hook
   def run_hook(ctx)
     if ctx.node
       if ctx.event.to_s == "post_store"
-        Slack.configure do |config|
-          config.token = cfg.token
-        end
-        client = Slack::Web::Client.new
+        client = Slack::Client.new token: cfg.token
         client.auth_test
         diff = `cd #{ctx.node.repo.to_s} && git diff --no-color #{ctx.commitref.to_s}~1..#{ctx.commitref.to_s}`
         title = "#{ctx.node.name.to_s} #{ctx.node.group.to_s} #{ctx.node.model.class.name.to_s.downcase}"
