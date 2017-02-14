@@ -876,10 +876,10 @@ Your AWS credentials should be stored in `~/.aws/credentials`.
 
 The `slackdiff` hook posts config diffs to a [Slack](http://www.slack.com) channel of your choice using a webhook. It only triggers for `post_store` events.
 
-You will need to manually install the `slack-notifier` gem on your system:
+You will need to manually install the `slack-ruby-client` gem on your system:
 
 ```
-gem install slack-notifier
+gem install slack-ruby-client
 ```
 
 Configuration example:
@@ -889,9 +889,8 @@ hooks:
   slack:
     type: slackdiff
     events: [post_store]
-    webhook_url: SLACK_WEBHOOK_URL__GENERATE_VIA_YOUR_SLACK_ADMIN_CONSOLE
+    token: SLACK_BOT_TOKEN
     channel: #network-changes
-    username: oxidized
 ```
 
 # Ruby API
