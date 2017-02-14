@@ -874,12 +874,12 @@ Your AWS credentials should be stored in `~/.aws/credentials`.
 
 ## Hook type: slackdiff
 
-The `slackdiff` hook posts config diffs to a [Slack](http://www.slack.com) channel of your choice using a webhook. It only triggers for `post_store` events.
+The `slackdiff` hook posts colorized config diffs to a [Slack](http://www.slack.com) channel of your choice. It only triggers for `post_store` events.
 
-You will need to manually install the `slack-ruby-client` gem on your system:
+You will need to manually install the `slack-api` gem on your system:
 
 ```
-gem install slack-ruby-client
+gem install slack-api
 ```
 
 Configuration example:
@@ -890,8 +890,10 @@ hooks:
     type: slackdiff
     events: [post_store]
     token: SLACK_BOT_TOKEN
-    channel: #network-changes
+    channel: "#network-changes"
 ```
+
+Note the channel name must be in quotes.
 
 # Ruby API
 
