@@ -16,7 +16,7 @@ class EOS < Oxidized::Model
      cfg.gsub! /username .+ role .+/, '<secret hidden>'
      cfg.gsub! /^(enable secret).*/, '\\1 <configuration removed>'
      cfg.gsub! /^(tacacs-server .*key \d+).*/, '\\1 <configuration removed>'
-     cfg.gsub! /^((isis authentication key .+) \S+.*/, '\\1 <secret hidden>'
+     cfg.gsub! /^(isis authentication key .+) \S+.*/, '\\1 <secret hidden>'
     cfg.gsub! /^(aaa root secret) .+/, '\\1 <secret hidden>'
      cfg
   end
