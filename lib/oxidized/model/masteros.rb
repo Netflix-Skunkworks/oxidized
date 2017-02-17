@@ -5,8 +5,9 @@ class MasterOS < Oxidized::Model
 comment '!'
 
   cmd :secret do |cfg|
-    cfg.gsub! /^(snmp-server community).*/, '\\1 <configuration removed>'
-    cfg.gsub! /username (\S+) password encrypted (\S+) class (\S+).*/, '<secret hidden>'
+    cfg.gsub!(/^(snmp-server community).*/, '\\1 <configuration removed>')
+    cfg.gsub!(/^(aaa remote-server).*/, '\\1 <configuration removed>')
+    cfg.gsub!(/username (\S+) password encrypted (\S+) class (\S+).*/, '<secret hidden>')
     cfg
   end
 

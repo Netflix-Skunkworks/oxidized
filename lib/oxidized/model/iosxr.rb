@@ -12,6 +12,8 @@ class IOSXR < Oxidized::Model
   cmd :secret do |cfg| 
     cfg.gsub! /^(snmp-server community).*/, '\\1 <configuration removed>'
     cfg.gsub! /secret (\d+) (\S+).*/, '<secret hidden>'
+    cfg.gsub! /^((isis authentication key .+) \S+.*/, '\\1 <secret hidden>'
+    cfg.gsub! /^(aaa root secret \S*) \S+.*/, '\\1 <secret hidden>'
     cfg
   end
 
