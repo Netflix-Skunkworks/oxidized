@@ -13,7 +13,7 @@ class JunOS < Oxidized::Model
 
   cmd :secret do |cfg|
     cfg.gsub!(/encrypted-password (\S+).*/, '<secret removed>')
-    cfg.gsub!(/community (\S+) {/, 'community <hidden> {')
+    cfg.gsub!(/(.*snmp {\n.*?community )(\S+)( {.*)/m, "\\1<secret removed>\\3")
     cfg
   end
 
