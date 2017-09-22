@@ -2,21 +2,21 @@ class CX < Oxidized::Model
 
   # Infinera Cloud Xpress model #
 
-  prompt /(^.*[#>] .*$)|(^Login:$)/
+  prompt /(^.*[#>] \e\[0m$)|(^Login:$)/
 
   comment '! '
 
-  expect /^\s*-- More --\s+.*$/ do |data, re|
+  expect /.*-- More --.*/ do |data, re|
     send ' '
     data.sub re, ''
   end
 
   cmd :all do |cfg|
-    cfg.each_line.to_a[1..-2].join
+    cfg.each_line.to_a[2..-2].map { |x| x.sub!(/\e\[2K\r/, "") }.join
   end
 
   cmd :secret do |cfg|
-    cfg.gsub! /^(\s+ community).*/, '\\1 <configuration removed>'
+    cfg.gsub! /(\s*community).*/, '\\1 <configuration removed>'
     cfg
   end
 
@@ -29,7 +29,7 @@ class CX < Oxidized::Model
   end
 
   cfg :telnet, :ssh do
-    # save username and password for second login
+    # store username and password for second login
     auth = self.node.auth.dup
 
     # set node auth for first login
@@ -41,7 +41,7 @@ class CX < Oxidized::Model
         send auth[:username] + "\n"
         expect /^Enter Password :\s+$/
         send auth[:password] + "\n"
-        expect /.*Password ExpireDays.*/
+        expect /.*\e\[31m> \e\[0m$/
         send "enable\n"
         expect self.node.prompt
       end
