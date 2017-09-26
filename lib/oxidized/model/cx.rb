@@ -2,9 +2,9 @@ class CX < Oxidized::Model
 
   # Infinera Cloud Xpress model #
 
-  prompt /(^.*[#>] \e\[0m$)|(^Login:$)/
+  prompt /(^.+[#>] \e\[0m$)|(^Login:$)/
 
-  comment '! '
+  comment '// '
 
   expect /.*-- More --.*/ do |data, re|
     send ' '
@@ -12,7 +12,7 @@ class CX < Oxidized::Model
   end
 
   cmd :all do |cfg|
-    cfg.each_line.to_a[2..-2].map { |x| x.sub!(/\e\[2K\r/, "") }.join
+    cfg.each_line.to_a[1..-2].map { |x| x.sub!(/\e\[2K\r/, "") }.join
   end
 
   cmd :secret do |cfg|
@@ -36,15 +36,20 @@ class CX < Oxidized::Model
     self.node.auth[:username] = 'cliuser'
     self.node.auth[:password] = nil
 
-    if vars :enable
-      post_login do
-        send auth[:username] + "\n"
-        expect /^Enter Password :\s+$/
-        send auth[:password] + "\n"
-        expect /.*\e\[31m> \e\[0m$/
-        send "enable\n"
-        expect self.node.prompt
-      end
+    post_login do
+      send auth[:username] + "\n"
+      expect /^Enter Password :\s+$/
+      send auth[:password] + "\n"
+      expect /.*\e\[31m> \e\[0m$/
+      send "enable\n"
+      expect /^.+# \e\[0m$/
+      send "\n"
+      expect /^.+# \e\[0m$/
+
+      # restore original auth
+      self.node.auth[:username] = auth[:username]
+      self.node.auth[:password] = auth[:password]
+
     end
     pre_logout 'exit'
   end
